@@ -18,10 +18,23 @@ class OAuthConfiguration:
         self.access_token = configs.get("access-token").data
         self.access_token_secret = configs.get("access-token-secret").data
 
-    def createSession(self):
+    def create_session(self):
         return OAuth1Session(
             self.consumer_key,
             client_secret=self.consumer_secret,
             resource_owner_key=self.access_token,
             resource_owner_secret=self.access_token_secret,
         )
+
+
+def configure_bearer_oauth(request):
+    request.headers["Authorization"] = f"Bearer {get_bearer_token()}"
+    request.headers["User-Agent"] = "Bu"
+    return request
+
+
+def get_bearer_token():
+    configs = Properties()
+    with open('resources/secret.properties', 'rb') as read_prop:
+        configs.load(read_prop)
+    return configs.get("bearer-token").data
