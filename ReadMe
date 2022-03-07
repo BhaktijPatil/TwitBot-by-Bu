@@ -1,0 +1,3 @@
+PIP commands used:
+pip install requests_oauthlib
+pip install jproperties
