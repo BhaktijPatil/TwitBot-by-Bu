@@ -1,5 +1,9 @@
+import json
+
+
 def display_success(response):
-    print("Tweet Successful: {} {}".format(response.status_code, response.text))
+    print("Tweet Successful: {}".format(response.status_code))
+    print(json.dumps(response.json(), indent=2))
 
 
 def display_error(response):
