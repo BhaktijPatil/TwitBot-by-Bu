@@ -1,7 +1,10 @@
 from datetime import datetime, date
 
+from twitbot.common.databasehandler.database_connector import connect_img_db
+from twitbot.common.databasehandler.image_db_operations import add_entry_video_game_image_dataset
 from twitbot.endpoints.search import search_tweet, find_tweet_count_distribution
 from twitbot.endpoints.upload import upload_img
+from twitbot.imagerecognition.google_vision import detect_labels
 from twitbot.visualize.data_preprocessor import convert_ukraine_stats_to_df
 from twitbot.visualize.seaborn_visualizer import create_ukraine_war_trend_bar_graph
 from twitbot.endpoints.tweet import tweet_plain_text
@@ -32,15 +35,48 @@ def visualize_ukraine_invasion_trend():
     axes_labels = ["Date", "Tweet Count"]
     axes = ["date", "tweet_count"]
     title = 'No. of Ukraine related tweets over the week'
-    save_loc = 'D:\\Projects\\Pycharm\\TwitBot\\twitbot\\resources\graphs\\ukraine_tweet_trends_' + date.today().strftime(
+    save_loc = 'D:\\Projects\\Pycharm\\TwitBot\\twitbot\\resources\\graphs\\ukraine_tweet_trends_' + date.today().strftime(
         "%d-%m-%Y") + '.png'
     create_ukraine_war_trend_bar_graph(ukraine_df, axes_labels, axes, title, save_loc)
     img_upload_response = upload_img(save_loc)
 
 
+def find_war_trends():
+    trending_entities = ['Ukraine', 'Russia', 'Putin', 'Zelensky', 'NATO', 'UN']
+    trending_entities_tweet_count_map = []
+    for entity in trending_entities:
+        generic_war_trends_query = {'query': entity, 'granularity': 'day'}
+        tweet_count = find_tweet_count_distribution(generic_war_trends_query).json().get('meta').get(
+            'total_tweet_count')
+        trending_entities_tweet_count_map.append([entity, tweet_count])
+
+    tweet = "Over the last week, the words Ukraine, Russia, Putin, Zelensky, NATO, UN appeared in tweets many millions of times.\nHere's the exact count:"
+    hashtags = "#Ukraine #Analysis"
+    for entity_tweet_count in trending_entities_tweet_count_map:
+        tweet += "\n" + entity_tweet_count[0] + ":" + "{:,}".format(entity_tweet_count[1])
+    tweet += "\n" + hashtags
+    tweet_plain_text(tweet)
+
+
+def add_entry_to_video_game_img_db():
+    image_path = "/1.jpg"
+    image_label_detection_response = None
+    expected_labels = None
+    video_game_name = "ELDEN_RING"
+    database = connect_img_db()
+    add_entry_video_game_image_dataset(database, image_path, image_label_detection_response, expected_labels,
+                                       video_game_name)
+
+
+def whats_google_see_in_this_image():
+    response = detect_labels()
+
+
 def main():
-    visualize_ukraine_invasion_trend()
-    # tweet
+    add_entry_to_video_game_img_db()
+    # whats_google_see_in_this_image()
+    # find_war_trends()
+    # visualize_ukraine_invasion_trend()
 
 
 main()
