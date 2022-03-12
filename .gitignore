@@ -1,2 +1,4 @@
 /twitbot/resources/secret.properties
 /twitbot/resources/path.properties
+/twitbot/resources/datasets/videogame_screenshots/
+/twitbot/resources/graphs/
