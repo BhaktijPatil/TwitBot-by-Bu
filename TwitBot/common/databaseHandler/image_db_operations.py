@@ -1,8 +1,9 @@
-def add_entry_video_game_image_dataset(database, image_path, image_label_detection_response, expected_labels,
-                                       video_game_name):
+import json
+
+
+def add_predicted_image_details_to_db(database, image_path, predicted_labels, game_id):
     cursor = database.cursor()
-    query = "INSERT INTO image_db.video_game_image_dataset(image_path, image_label_detection_response, " \
-            "expected_labels, video_game_name) VALUES(%s,%s,%s,%s); "
-    values = [image_path, image_label_detection_response, expected_labels, video_game_name]
+    query = "INSERT INTO image_db.videogame_image_dataset(image_path, predicted_labels, game_id) VALUES(%s,%s,%s); "
+    values = [image_path, json.dumps(predicted_labels), game_id]
     cursor.execute(query, values)
     database.commit()

@@ -11,12 +11,12 @@ class OAuthConfiguration:
 
     def __init__(self):
         configs = Properties()
-        with open('resources/secret.properties', 'rb') as read_prop:
+        with open('D:/Projects/Pycharm/TwitBot/twitbot/resources/secret.properties', 'rb') as read_prop:
             configs.load(read_prop)
-        self.consumer_key = configs.get("API-key").data
-        self.consumer_secret = configs.get("API-secret").data
-        self.access_token = configs.get("access-token").data
-        self.access_token_secret = configs.get("access-token-secret").data
+        self.consumer_key = configs.get('API-key').data
+        self.consumer_secret = configs.get('API-secret').data
+        self.access_token = configs.get('access-token').data
+        self.access_token_secret = configs.get('access-token-secret').data
 
     def create_session(self):
         return OAuth1Session(
@@ -28,13 +28,20 @@ class OAuthConfiguration:
 
 
 def configure_bearer_oauth(request):
-    request.headers["Authorization"] = f"Bearer {get_bearer_token()}"
-    request.headers["User-Agent"] = "Bu"
+    request.headers['Authorization'] = f"Bearer {get_bearer_token()}"
+    request.headers['User-Agent'] = 'Bu'
+    return request
+
+
+def configure_bearer_oauth_for_upload(request):
+    request.headers['Authorization'] = f"Bearer {get_bearer_token()}"
+    request.headers['User-Agent'] = 'Bu'
+    request.headers['Content-Type'] = 'multipart/form-data'
     return request
 
 
 def get_bearer_token():
     configs = Properties()
-    with open('resources/secret.properties', 'rb') as read_prop:
+    with open('D:/Projects/Pycharm/TwitBot/twitbot/resources/secret.properties', 'rb') as read_prop:
         configs.load(read_prop)
-    return configs.get("bearer-token").data
+    return configs.get('bearer-token').data

@@ -9,6 +9,7 @@ from twitbot.visualize.data_preprocessor import convert_ukraine_stats_to_df
 from twitbot.visualize.seaborn_visualizer import create_ukraine_war_trend_bar_graph
 from twitbot.endpoints.tweet import tweet_plain_text
 
+# Welcome to Bu's Science Lab. I write my trash code here.
 
 # Test tweet
 # tweet_plain_text("Beep Bop. Test tweet!")
@@ -57,24 +58,8 @@ def find_war_trends():
     tweet += "\n" + hashtags
     tweet_plain_text(tweet)
 
-
-def add_entry_to_video_game_img_db():
-    image_path = "/1.jpg"
-    image_label_detection_response = None
-    expected_labels = None
-    video_game_name = "ELDEN_RING"
-    database = connect_img_db()
-    add_entry_video_game_image_dataset(database, image_path, image_label_detection_response, expected_labels,
-                                       video_game_name)
-
-
-def whats_google_see_in_this_image():
-    response = detect_labels()
-
-
 def main():
-    add_entry_to_video_game_img_db()
-    # whats_google_see_in_this_image()
+    pass
     # find_war_trends()
     # visualize_ukraine_invasion_trend()
 

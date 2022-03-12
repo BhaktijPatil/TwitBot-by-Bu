@@ -4,17 +4,9 @@ def detect_labels(path):
     client = vision.ImageAnnotatorClient()
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
-
     image = vision.Image(content=content)
-
     response = client.label_detection(image=image)
     labels = response.label_annotations
-    print('Labels:')
-
-    for label in labels:
-        print(label.description)
-
-    print(response)
 
     if response.error.message:
         raise Exception(
@@ -22,6 +14,13 @@ def detect_labels(path):
             'https://cloud.google.com/apis/design/errors'.format(
                 response.error.message))
 
-    return response
+    return labels
 
-# detect_labels('C:\\Users\\Ant PC\\AppData\\Roaming\\.minecraft\\screenshots\\2021-12-06_15.41.27.png')
+
+def get_predicted_labels(label_annotations, confidence, ignore_labels):
+    predicted_labels = []
+    for label_annotation in label_annotations:
+        if label_annotation.score >= confidence and not label_annotation.description in ignore_labels:
+            label_annotation = {'label': label_annotation.description, 'score': label_annotation.score}
+            predicted_labels.append(label_annotation)
+    return predicted_labels
